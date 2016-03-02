@@ -129,6 +129,9 @@ local toV,toH = 0,0 -- direction de deplacement recuperer en fonction des touche
 local toUp, toLeft, toDown, toRight = "up", "left", "down", "right"
 local toUpD, toLeftD, toDownD, toRightD = 1, -1, -1, 1
 
+
+local rotation = 0
+
 -- =============================================================================
 
 function love.load()
@@ -152,6 +155,7 @@ function love.update(delta_time)
 	end
 		
 	if toH ~= 0 then -- rotation
+		rotation = rotation + deltaRotation*-toH
 		local oldDX = dx
 		dx = dx*math.cos(-toH*deltaRotation) - dy*math.sin(-toH*deltaRotation)
 		dy = oldDX*math.sin(-toH*deltaRotation) + dy*math.cos(-toH*deltaRotation)
@@ -246,6 +250,30 @@ function love.draw()
 		love.graphics.line(x,drawStart,x,drawEnd)
 	
 	end
+	
+	-- ====MINI MAP==============
+	local cc = 6
+	local xmp, ymp = cc*#map, cc*#map[1]
+--	Utils.print_r(xmp..":"..ymp)
+	love.graphics.setColor({100,100,100})
+	love.graphics.rectangle( "fill", w-xmp, h-ymp, xmp, ymp )
+	for x=1,#map,1 do
+		for y=1,#map[1] do
+			if map[x][y] > 0 then
+				love.graphics.setColor({100,255,100})
+				love.graphics.rectangle( "fill", w-x*cc, h-ymp+(y-1)*cc, cc, cc )
+			end
+		end
+	end
+	-- position courante
+	local a,b = w-math.floor(px)*cc, h-ymp+(math.floor(py)-1)*cc
+	love.graphics.setColor({0,255,0})
+	love.graphics.rectangle( "fill", a, b, cc, cc )
+	-- cone de vision
+	love.graphics.setColor({255,255,0})
+	love.graphics.polygon('fill', a+cc/2, b+cc/2, a+cc/2+10*math.cos(rotation+0.52359877559), b+cc/2-10*math.sin(rotation+0.52359877559), a+cc/2+10*math.cos(rotation-0.52359877559), b+cc/2-10*math.sin(rotation-0.52359877559)) -- izi pizi
+
+	
 end
 
 -- =============================================================================
