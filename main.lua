@@ -1,6 +1,7 @@
 love.graphics.setDefaultFilter("nearest") -- set le filtre d'affichage par defaut des images
 local Utils = require("utils")
 
+local Labyrinthe = require("Labyrinthe")
 
 
 local classicmap = {
@@ -206,8 +207,12 @@ local rotation = 0
 -- =============================================================================
 
 function love.load()
-
-
+	--[[local m = Labyrinthe:new(100,100)
+	m:gen()
+	map = m:get()
+	px, py = m:getStart()
+	print("px="..px.." py="..py)
+--]]
 end
 
 -- =============================================================================
@@ -329,7 +334,7 @@ function love.draw()
 	end
 	
 	-- ====MINI MAP==============
-	local cc = 6
+	local cc = 3
 	local xmp, ymp = cc*#map, cc*#map[1]
 --	Utils.print_r(xmp..":"..ymp)
 	love.graphics.setColor({100,100,100})
